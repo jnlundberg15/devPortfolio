@@ -6,11 +6,10 @@ class PortfoliosController < ApplicationController
 
   def new
     @portfolio_item = Portfolio.new
-
   end 
   
   def create
-    @portfolio_item = Portfolio.new(params.require(:portfolio).permit(:title, :subtitle, :body))
+    @portfolio_item = Portfolio.new(portfolio_params)
 
     respond_to do |format|
       if @portfolio_item.save
@@ -21,5 +20,26 @@ class PortfoliosController < ApplicationController
       end
     end
   end
+
+  def edit
+    @portfolio_item = Portfolio.find(params[:id])
+  end
+
+  def update
+    @portfolio_item = Portfolio.find(params[:id])
+
+    respond_to do |format|
+      if @portfolio_item.update(portfolio_params)
+        format.html { redirect_to portfolios_path, notice: 'Portfolio was successfully updated.' }
+      else
+        format.html { render :edit }
+      end
+    end
+  end
+
+  def portfolio_params
+      params.require(:portfolio).permit(:title, :subtitle, :body)
+  end
+
 
 end
